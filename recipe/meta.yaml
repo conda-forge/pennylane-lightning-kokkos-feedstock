@@ -11,15 +11,11 @@ source:
   sha256: 7c8f0e0431f8052993cd8033a316f53590c7bf5419445d0725e214b93cbc661b
   patches:
     - 0001-setup.patch
-    - 0002-setup.patch  # [osx]
 
 build:
   number: 0
   skip: true  # [win]
-  script: |
-    {{ PYTHON }} setup.py build_ext --define="PLKOKKOS_ENABLE_WARNINGS=OFF"
-    {{ PYTHON }} setup.py bdist_wheel
-    {{ PYTHON }} -m pip install . --no-deps -vv
+  script: {{ PYTHON }} -m pip install . --no-deps -vv
 
 requirements:
   build:
