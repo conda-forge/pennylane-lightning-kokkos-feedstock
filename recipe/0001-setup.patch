@@ -1,5 +1,5 @@
 diff --git a/setup.py b/setup.py
-index 9a1e2ae..1eefd0c 100644
+index 9a1e2ae..c22a19c 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -37,17 +37,11 @@ if not os.getenv("READTHEDOCS"):
@@ -86,14 +86,13 @@ index 9a1e2ae..1eefd0c 100644
 -                if os.getenv(var):
 -                    tmp = os.getenv(var)
 -                    configure_args += [f"-DCMAKE_{opt}_COMPILER={tmp}"]
-+            
++
              if not Path(self.build_temp).exists():
                  os.makedirs(self.build_temp)
--
-+            
+ 
 +            if "CMAKE_ARGS" not in os.environ.keys():
 +                os.environ["CMAKE_ARGS"] = ""
-+                
++
 +            subprocess.check_call(
 +                ["cmake"]
 +                + os.environ["CMAKE_ARGS"].split(" ")
@@ -112,3 +111,17 @@ index 9a1e2ae..1eefd0c 100644
  
  
  with open("pennylane_lightning_kokkos/_version.py") as f:
+@@ -155,7 +121,12 @@ info = {
+     "url": "https://github.com/PennyLaneAI/pennylane-lightning-kokkos",
+     "license": "Apache License 2.0",
+     "packages": find_packages(where="."),
+-    "package_data": {"pennylane_lightning_kokkos": ["src/*"]},
++    "package_data": {
++        "pennylane_lightning_kokkos": [
++            os.path.join("src", "*"),
++            os.path.join("src", "**", "*"),
++        ]
++    },
+     "entry_points": {
+         "pennylane.plugins": [
+             "lightning.kokkos = pennylane_lightning_kokkos:LightningKokkos",
