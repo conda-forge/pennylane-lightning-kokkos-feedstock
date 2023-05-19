@@ -13,7 +13,7 @@ source:
     - 0001-setup.patch
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win]
   script: |
     {{ PYTHON }} setup.py build_ext --define="PLKOKKOS_ENABLE_WARNINGS=OFF"
@@ -32,12 +32,12 @@ requirements:
   host:
     - libgomp      # [linux]
     - llvm-openmp  # [osx]
-    - kokkos =3.7
+    - kokkos >=3.7.0,<4
     - pip
     - pybind11
     - python
   run:
-    - pennylane >=0.28
+    - pennylane >=0.30
     - python
 test:
   imports:
