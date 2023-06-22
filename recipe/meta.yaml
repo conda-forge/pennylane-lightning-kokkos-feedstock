@@ -16,6 +16,7 @@ source:
 build:
   number: 4
   skip: true  # [win]
+  skip: true  # [cuda_compiler_version in ("10.2", "11.0", "11.1", "12.0")]
   script: |
     {{ PYTHON }} setup.py build_ext --define="PLKOKKOS_ENABLE_WARNINGS=OFF"
     {{ PYTHON }} setup.py bdist_wheel
@@ -28,13 +29,14 @@ requirements:
     - pybind11                               # [build_platform != target_platform]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-  # Will get nvcc linker warnings if the cudatoolkit version doesn't match
-{% if cuda_major == 11 %}
-    - cudatoolkit {{ environ.get("cuda_compiler_version") }}
-{% endif %}
+    - {{ compiler('cuda') }}  # [cuda_compiler_version != "None"]
     - cmake
     - ninja
   host:
+{% if cuda_major == 11 %}
+    # Will get nvcc linker warnings if the cudatoolkit version doesn't match
+    - cudatoolkit {{ environ.get("cuda_compiler_version") }}
+{% endif %}
     - libgomp      # [linux]
     - llvm-openmp  # [osx]
     - kokkos >=3.7.0,<4
