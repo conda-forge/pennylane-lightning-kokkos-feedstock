@@ -1,6 +1,7 @@
 {% set name = "pennylane-lightning-kokkos" %}
 {% set version = "0.30.0" %}
 
+{% set cuda_major = environ.get("cuda_compiler_version", "0.0").split(".")[0]|int %}
 
 package:
   name: {{ name }}
@@ -13,7 +14,7 @@ source:
     - 0001-setup.patch
 
 build:
-  number: 3
+  number: 4
   skip: true  # [win]
   script: |
     {{ PYTHON }} setup.py build_ext --define="PLKOKKOS_ENABLE_WARNINGS=OFF"
@@ -27,6 +28,10 @@ requirements:
     - pybind11                               # [build_platform != target_platform]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+  # Will get nvcc linker warnings if the cudatoolkit version doesn't match
+{% if cuda_major == 11 %}
+    - cudatoolkit {{ environ.get("cuda_compiler_version") }}
+{% endif %}
     - cmake
     - ninja
   host:
