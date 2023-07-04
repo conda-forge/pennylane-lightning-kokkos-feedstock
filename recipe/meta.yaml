@@ -35,7 +35,7 @@ requirements:
     - pybind11
     - python
   run:
-    - pennylane >=0.30
+    - pennylane >=0.31
     - python
 test:
   imports:
