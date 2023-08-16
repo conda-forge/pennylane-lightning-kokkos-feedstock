@@ -30,7 +30,7 @@ requirements:
   host:
     - libgomp      # [linux]
     - llvm-openmp  # [osx]
-    - kokkos >=3.7.0,<4
+    - kokkos
     - pip
     - pybind11
     - python
