@@ -16,7 +16,8 @@ build:
   number: 0
   skip: true  # [win]
   script: |
-    {{ PYTHON }} -m pip install . --no-deps -vv
+    {{ PYTHON }} -m pip install . --no-deps -vv  # [linux]
+    CMAKE_ARGS="-DKokkos_ENABLE_OPENMP=OFF" {{ PYTHON }} -m pip install . --no-deps -vv  # [osx]
 
 requirements:
   build:
@@ -42,8 +43,8 @@ test:
     - pennylane_lightning_kokkos
   commands:
     - python -c "import pennylane as qml; qml.about()"
-    - pl-device-test --device lightning.kokkos --shots None --skip-ops   # [linux]
-    - pl-device-test --device lightning.kokkos --shots 10000 --skip-ops  # [linux]
+    - pl-device-test --device lightning.kokkos --shots None --skip-ops
+    - pl-device-test --device lightning.kokkos --shots 10000 --skip-ops
     - pip check
   requires:
     - setuptools
