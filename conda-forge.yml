@@ -12,5 +12,4 @@ provider:
   linux_ppc64le: azure
 test: native_and_emulated
 azure:
-  force: False
   store_build_artifacts: True
