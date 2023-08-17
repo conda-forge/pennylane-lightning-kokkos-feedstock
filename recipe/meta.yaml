@@ -15,7 +15,8 @@ source:
 build:
   number: 0
   skip: true  # [win]
-  script_env: CMAKE_ARGS="-DKokkos_ENABLE_OPENMP=OFF"  # [osx]
+  script_env: 
+    - CMAKE_ARGS="-DKokkos_ENABLE_OPENMP=OFF"  # [osx]
   script: |
     {{ PYTHON }} -m pip install . --no-deps -vv  # [linux]
 
