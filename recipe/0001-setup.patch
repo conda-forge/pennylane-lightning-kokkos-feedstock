@@ -45,3 +45,25 @@ index af1fd60..69a9ab3 100644
                  cwd=self.build_temp,
                  env=os.environ,
              )
+diff --git a/setup.py b/setup.py
+index af1fd60..64be309 100644
+--- a/setup.py
++++ b/setup.py
+@@ -93,14 +93,11 @@ if not os.getenv("READTHEDOCS"):
+             if not Path(self.build_temp).exists():
+                 os.makedirs(self.build_temp)
+ 
+-            if "CMAKE_ARGS" not in os.environ.keys():
+-                os.environ["CMAKE_ARGS"] = ""
++            if "CMAKE_ARGS" in os.environ.keys():
++                configure_args += os.environ["CMAKE_ARGS"].split(" ")
+ 
+             subprocess.check_call(
+-                ["cmake"]
+-                + os.environ["CMAKE_ARGS"].split(" ")
+-                + [str(ext.sourcedir)]
+-                + configure_args,
++                ["cmake", str(ext.sourcedir)] + configure_args,
+                 cwd=self.build_temp,
+                 env=os.environ,
+             )
