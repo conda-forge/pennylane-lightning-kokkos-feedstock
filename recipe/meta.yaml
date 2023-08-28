@@ -1,5 +1,5 @@
 {% set name = "pennylane-lightning-kokkos" %}
-{% set version = "0.30.0" %}
+{% set version = "0.32.0" %}
 
 
 package:
@@ -8,12 +8,12 @@ package:
 
 source:
   url: https://github.com/PennyLaneAI/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 7c8f0e0431f8052993cd8033a316f53590c7bf5419445d0725e214b93cbc661b
+  sha256: 06f19dfb1073387ef9ee30c38ea44884844a771373256b694a0e1ceb87195bb2
   patches:
     - 0001-setup.patch
 
 build:
-  number: 3
+  number: 0
   skip: true  # [win]
   script: |
     {{ PYTHON }} setup.py build_ext --define="PLKOKKOS_ENABLE_WARNINGS=OFF"
