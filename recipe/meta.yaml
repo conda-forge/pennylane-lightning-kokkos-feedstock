@@ -1,5 +1,5 @@
 {% set name = "pennylane-lightning-kokkos" %}
-{% set version = "0.30.0" %}
+{% set version = "0.32.0" %}
 
 
 package:
@@ -8,12 +8,10 @@ package:
 
 source:
   url: https://github.com/PennyLaneAI/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 7c8f0e0431f8052993cd8033a316f53590c7bf5419445d0725e214b93cbc661b
-  patches:
-    - 0001-setup.patch
+  sha256: 06f19dfb1073387ef9ee30c38ea44884844a771373256b694a0e1ceb87195bb2
 
 build:
-  number: 3
+  number: 0
   skip: true  # [win]
   script: |
     {{ PYTHON }} setup.py build_ext --define="PLKOKKOS_ENABLE_WARNINGS=OFF"
@@ -22,22 +20,21 @@ build:
 
 requirements:
   build:
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-    - pybind11                               # [build_platform != target_platform]
-    - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - cmake
-    - ninja
-  host:
+    - cmake >=3.21.1,<4
     - libgomp      # [linux]
     - llvm-openmp  # [osx]
-    - kokkos >=3.7.0,<4
+    - ninja
+    - python                              # [build_platform != target_platform]
+    - cross-python_{{ target_platform }}  # [build_platform != target_platform]
+    - pybind11                            # [build_platform != target_platform]
+  host:
+    - kokkos >=4.1.0,<5
     - pip
     - pybind11
     - python
   run:
-    - pennylane >=0.30
+    - pennylane >=0.32
     - python
 test:
   imports:
