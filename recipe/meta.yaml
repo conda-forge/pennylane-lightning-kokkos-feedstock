@@ -30,12 +30,12 @@ requirements:
   host:
     - libgomp      # [linux]
     - llvm-openmp  # [osx]
-    - kokkos >=3.7.0,<4
+    - kokkos >=4,<5
     - pip
     - pybind11
     - python
   run:
-    - pennylane >=0.30
+    - pennylane >=0.32
     - python
 test:
   imports:
