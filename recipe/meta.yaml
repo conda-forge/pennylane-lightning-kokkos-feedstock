@@ -11,7 +11,7 @@ source:
   sha256: 06f19dfb1073387ef9ee30c38ea44884844a771373256b694a0e1ceb87195bb2
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win]
   script: |
     {{ PYTHON }} setup.py build_ext --define="PLKOKKOS_ENABLE_WARNINGS=OFF"
