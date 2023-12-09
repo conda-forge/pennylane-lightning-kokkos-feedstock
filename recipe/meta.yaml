@@ -1,51 +1,56 @@
 {% set name = "pennylane-lightning-kokkos" %}
-{% set version = "0.32.0" %}
-
+{% set version = "0.33.1" %}
+{% set build_num = 0 %}
 
 package:
   name: {{ name }}
   version: {{ version }}
 
 source:
-  url: https://github.com/PennyLaneAI/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 06f19dfb1073387ef9ee30c38ea44884844a771373256b694a0e1ceb87195bb2
+  url: https://github.com/PennyLaneAI/pennylane-lightning/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: 878f63cd1afadd52386b1aca9c0e3fb0a097b64ce8e347b325ebc7cac722e5e0
 
 build:
-  number: 0
+  number: {{ build_num }}
   skip: true  # [win]
-  script: |
-    {{ PYTHON }} setup.py build_ext --define="PLKOKKOS_ENABLE_WARNINGS=OFF"
-    {{ PYTHON }} setup.py bdist_wheel
-    {{ PYTHON }} -m pip install . --no-deps -vv
+  script:
+    - CMAKE_ARGS="-DPL_BACKEND=lightning_kokkos -DCMAKE_CXX_COMPILER_TARGET=arm64-apple-macos11 -DCMAKE_SYSTEM_NAME=Darwin -DCMAKE_SYSTEM_PROCESSOR=ARM64" {{ PYTHON }} -m pip install . --no-deps -vv  # [osx and build_platform != target_platform]
+    - PL_BACKEND=lightning_kokkos {{ PYTHON }} -m pip install . --no-deps -vv  # [not osx or build_platform == target_platform]
 
 requirements:
   build:
     - {{ compiler('cxx') }}
-    - cmake >=3.21.1,<4
+    - python                                 # [build_platform != target_platform]
+    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+    - pybind11                               # [build_platform != target_platform]
+    - cmake
+    - ninja
+  host:
     - libgomp      # [linux]
     - llvm-openmp  # [osx]
-    - ninja
-    - python                              # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}  # [build_platform != target_platform]
-    - pybind11                            # [build_platform != target_platform]
-  host:
-    - kokkos >=4.1.0,<5
+    - kokkos >=4.0.0,<4.2.0
     - pip
     - pybind11
     - python
   run:
-    - pennylane >=0.32
+    - pennylane >=0.33.1
     - python
+  run_constrained:
+    - __cuda <0.0a0  # [cuda_compiler_version == "None"]
 test:
   imports:
-    - pennylane_lightning_kokkos
+    - pennylane_lightning
+    - pennylane_lightning.lightning_kokkos
+    - pennylane_lightning.lightning_kokkos_ops  # [build_platform == target_platform]
   commands:
+    - pypy --version 2> /dev/null || echo Using Python to run tests
+    - pypy -c "import pennylane as qml; qml.about()" 2> /dev/null || echo PyPy not found
     - python -c "import pennylane as qml; qml.about()"
+    - pl-device-test --help
     - pl-device-test --device lightning.kokkos --shots None --skip-ops
-    - pl-device-test --device lightning.kokkos --shots 10000 --skip-ops
+    - pl-device-test --device lightning.kokkos --shots 100000 --skip-ops
     - pip check
   requires:
-    - setuptools
     - flaky
     - pip
     - pytest
