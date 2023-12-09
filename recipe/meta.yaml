@@ -13,7 +13,7 @@ source:
 build:
   number: 0
   skip: true  # [win]
-  script: |
+  script:
     - CMAKE_ARGS="-DPL_BACKEND=lightning_kokkos -DCMAKE_CXX_COMPILER_TARGET=arm64-apple-macos11 -DCMAKE_SYSTEM_NAME=Darwin -DCMAKE_SYSTEM_PROCESSOR=ARM64" {{ PYTHON }} -m pip install . --no-deps -vv  # [osx and build_platform != target_platform]
     - PL_BACKEND=lightning_kokkos {{ PYTHON }} -m pip install . --no-deps -vv  # [not osx or build_platform == target_platform]
 
