@@ -12,7 +12,7 @@ source:
 
 build:
   number: 0
-  skip: true  # [win or cuda_compiler_version != "None"]
+  skip: true  # [win or (cuda_compiler_version != "None")]
   script: PL_BACKEND=lightning_kokkos {{ PYTHON }} -m pip install . --no-deps -vv
 
 requirements:
@@ -31,7 +31,7 @@ requirements:
     - pybind11
     - python
   run:
-    - pennylane ={{ version }}
+    - pennylane =={{ version }}
     - python
   run_constrained:
 	  - __cuda <0.a0  # [cuda_compiler_version == "None"]
