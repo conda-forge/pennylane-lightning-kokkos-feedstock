@@ -34,7 +34,7 @@ requirements:
     - pennylane ={{ version }}
     - python
   run_constrained:
-	    - __cuda <0.a0  # [cuda_compiler_version == "None"]
+	  - __cuda <0.a0  # [cuda_compiler_version == "None"]
 test:
   imports:
     - pennylane_lightning
