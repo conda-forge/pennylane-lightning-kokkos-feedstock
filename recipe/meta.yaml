@@ -12,26 +12,30 @@ source:
 
 build:
   number: 0
-  skip: true  # [win or (cuda_compiler_version != "None")]
-  script: PL_BACKEND=lightning_kokkos {{ PYTHON }} -m pip install . --no-deps -vv
+  skip: true  # [win]
+  script: |
+    - CMAKE_ARGS="-DPL_BACKEND=lightning_kokkos -DCMAKE_CXX_COMPILER_TARGET=arm64-apple-macos11 -DCMAKE_SYSTEM_NAME=Darwin -DCMAKE_SYSTEM_PROCESSOR=ARM64" {{ PYTHON }} -m pip install . --no-deps -vv  # [osx and build_platform != target_platform]
+    - PL_BACKEND=lightning_kokkos {{ PYTHON }} setup.py build_ext  # [not osx or build_platform == target_platform]
+    - PL_BACKEND=lightning_kokkos {{ PYTHON }} setup.py bdist_wheel  # [not osx or build_platform == target_platform]
+    - PL_BACKEND=lightning_kokkos {{ PYTHON }} -m pip install . --no-deps -vv  # [not osx or build_platform == target_platform]
 
 requirements:
   build:
     - {{ compiler('cxx') }}
-    - cmake >=3.21.1,<4
+    - python                                 # [build_platform != target_platform]
+    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+    - pybind11                               # [build_platform != target_platform]
+    - cmake
+    - ninja
+  host:
     - libgomp      # [linux]
     - llvm-openmp  # [osx]
-    - ninja
-    - python                              # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}  # [build_platform != target_platform]
-    - pybind11                            # [build_platform != target_platform]
-  host:
-    - kokkos >=4.1.0,<5
+    - kokkos >=4.0.0,<5
     - pip
     - pybind11
     - python
   run:
-    - pennylane =={{ version }}
+    - pennylane >=0.33.1
     - python
   run_constrained:
     - __cuda <0.0a0  # [cuda_compiler_version == "None"]
@@ -41,7 +45,10 @@ test:
     - pennylane_lightning.lightning_kokkos
     - pennylane_lightning.lightning_kokkos_ops  # [build_platform == target_platform]
   commands:
+    - pypy --version 2> /dev/null || echo Using Python to run tests
+    - pypy -c "import pennylane as qml; qml.about()" 2> /dev/null || echo PyPy not found
     - python -c "import pennylane as qml; qml.about()"
+    - pl-device-test --help
     - pl-device-test --device lightning.kokkos --shots None --skip-ops
     - pl-device-test --device lightning.kokkos --shots 100000 --skip-ops
     - pip check
