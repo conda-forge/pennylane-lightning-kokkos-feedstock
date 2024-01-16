@@ -12,7 +12,7 @@ source:
 
 build:
   number: {{ build_num }}
-  skip: true  # [win]
+  skip: true  # [py==38 or win]
   script:
     - CMAKE_ARGS="-DPL_BACKEND=lightning_kokkos -DCMAKE_CXX_COMPILER_TARGET=arm64-apple-macos11 -DCMAKE_SYSTEM_NAME=Darwin -DCMAKE_SYSTEM_PROCESSOR=ARM64" {{ PYTHON }} -m pip install . --no-deps -vv  # [osx and build_platform != target_platform]
     - PL_BACKEND=lightning_kokkos {{ PYTHON }} -m pip install . --no-deps -vv  # [not osx or build_platform == target_platform]
@@ -33,7 +33,7 @@ requirements:
     - pybind11
     - python
   run:
-    - pennylane >=0.33.1
+    - pennylane >=0.34
     - python
   run_constrained:
     - __cuda <0.0a0  # [cuda_compiler_version == "None"]
