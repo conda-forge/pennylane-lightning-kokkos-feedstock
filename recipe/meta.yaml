@@ -55,6 +55,7 @@ test:
     - flaky
     - pip
     - pytest
+    - pytest-benchmark
     - pytest-mock
 about:
   home: https://docs.pennylane.ai/projects/lightning-kokkos
