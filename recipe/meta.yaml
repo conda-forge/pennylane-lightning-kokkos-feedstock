@@ -1,5 +1,5 @@
 {% set name = "pennylane-lightning-kokkos" %}
-{% set version = "0.33.1" %}
+{% set version = "0.34.0" %}
 {% set build_num = 0 %}
 
 package:
@@ -8,11 +8,11 @@ package:
 
 source:
   url: https://github.com/PennyLaneAI/pennylane-lightning/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 878f63cd1afadd52386b1aca9c0e3fb0a097b64ce8e347b325ebc7cac722e5e0
+  sha256: 398c3a1d4450a9f3e146204c22329da9adc3f83a1685ae69187f3b25f47824c0
 
 build:
   number: {{ build_num }}
-  skip: true  # [win]
+  skip: true  # [py==38 or win]
   script:
     - CMAKE_ARGS="-DPL_BACKEND=lightning_kokkos -DCMAKE_CXX_COMPILER_TARGET=arm64-apple-macos11 -DCMAKE_SYSTEM_NAME=Darwin -DCMAKE_SYSTEM_PROCESSOR=ARM64" {{ PYTHON }} -m pip install . --no-deps -vv  # [osx and build_platform != target_platform]
     - PL_BACKEND=lightning_kokkos {{ PYTHON }} -m pip install . --no-deps -vv  # [not osx or build_platform == target_platform]
@@ -33,8 +33,9 @@ requirements:
     - pybind11
     - python
   run:
-    - pennylane >=0.33.1
+    - pennylane >=0.34
     - python
+    - {{ pin_compatible('kokkos', min_pin='x.x.x', max_pin='x.x.x') }}
   run_constrained:
     - __cuda <0.0a0  # [cuda_compiler_version == "None"]
 test:
@@ -54,6 +55,7 @@ test:
     - flaky
     - pip
     - pytest
+    - pytest-benchmark
     - pytest-mock
 about:
   home: https://docs.pennylane.ai/projects/lightning-kokkos
