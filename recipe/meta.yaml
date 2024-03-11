@@ -1,6 +1,6 @@
 {% set name = "pennylane-lightning-kokkos" %}
-{% set version = "0.34.0" %}
-{% set build_num = 1 %}
+{% set version = "0.35.0" %}
+{% set build_num = 0 %}
 
 package:
   name: {{ name }}
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://github.com/PennyLaneAI/pennylane-lightning/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 398c3a1d4450a9f3e146204c22329da9adc3f83a1685ae69187f3b25f47824c0
+  sha256: 1a16fd3dbf03788e4f8dd510bbb668e7a7073ca62be4d9414e2c32e0166e8bda
 
 build:
   number: {{ build_num }}
@@ -28,12 +28,12 @@ requirements:
   host:
     - libgomp      # [linux]
     - llvm-openmp  # [osx]
-    - kokkos >=4.0.0,<4.2.0
+    - kokkos >=4.0.0,<4.3.0
     - pip
     - pybind11
     - python
   run:
-    - pennylane >=0.34
+    - pennylane >=0.35
     - python
     - {{ pin_compatible('kokkos', min_pin='x.x.x', max_pin='x.x.x') }}
   run_constrained:
