@@ -54,7 +54,7 @@ test:
   requires:
     - flaky
     - pip
-    - pytest
+    - pytest <8.1
     - pytest-benchmark
     - pytest-mock
 about:
