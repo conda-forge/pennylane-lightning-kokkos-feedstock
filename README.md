@@ -328,5 +328,4 @@ Feedstock Maintainers
 =====================
 
 * [@vincentmr](https://github.com/vincentmr/)
-* [@maliasadi](https://github.com/maliasadi/)
 
