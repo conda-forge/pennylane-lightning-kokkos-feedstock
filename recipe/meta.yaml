@@ -33,7 +33,7 @@ requirements:
     - pybind11
     - python
   run:
-    - pennylane >=0.35
+    - pennylane >=0.36
     - python
     - {{ pin_compatible('kokkos', min_pin='x.x.x', max_pin='x.x.x') }}
   run_constrained:
@@ -48,8 +48,8 @@ test:
     - pypy -c "import pennylane as qml; qml.about()" 2> /dev/null || echo PyPy not found
     - python -c "import pennylane as qml; qml.about()"
     - pl-device-test --help
-    - pl-device-test --device lightning.kokkos --shots None --skip-ops
-    - pl-device-test --device lightning.kokkos --shots 100000 --skip-ops
+    - pl-device-test --device lightning.kokkos --shots None --skip-ops  # [build_platform == target_platform]
+    - pl-device-test --device lightning.kokkos --shots 100000 --skip-ops  # [build_platform == target_platform]
     - pip check
   requires:
     - flaky
