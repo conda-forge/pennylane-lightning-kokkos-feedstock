@@ -1,6 +1,6 @@
 {% set name = "pennylane-lightning-kokkos" %}
-{% set version = "0.35.1" %}
-{% set build_num = 1 %}
+{% set version = "0.36.0" %}
+{% set build_num = 0 %}
 
 package:
   name: {{ name }}
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://github.com/PennyLaneAI/pennylane-lightning/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: d39a2749d08ef2ba336ed2d6f77b3bd5f6d1b25292263a41b97943ae7538b7da
+  sha256: c5fb24bdaf2ebdeaf614bfb3a8bcc07ee83c2c7251a3893399bb0c189d2d1d01
 
 build:
   number: {{ build_num }}
@@ -20,6 +20,7 @@ build:
 requirements:
   build:
     - {{ compiler('cxx') }}
+    - {{ stdlib("c") }}
     - python                                 # [build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - pybind11                               # [build_platform != target_platform]
@@ -33,7 +34,7 @@ requirements:
     - pybind11
     - python
   run:
-    - pennylane >=0.35
+    - pennylane >=0.36
     - python
     - {{ pin_compatible('kokkos', min_pin='x.x.x', max_pin='x.x.x') }}
   run_constrained:
@@ -48,8 +49,8 @@ test:
     - pypy -c "import pennylane as qml; qml.about()" 2> /dev/null || echo PyPy not found
     - python -c "import pennylane as qml; qml.about()"
     - pl-device-test --help
-    - pl-device-test --device lightning.kokkos --shots None --skip-ops
-    - pl-device-test --device lightning.kokkos --shots 100000 --skip-ops
+    - pl-device-test --device lightning.kokkos --shots None --skip-ops  # [build_platform == target_platform]
+    - pl-device-test --device lightning.kokkos --shots 100000 --skip-ops  # [build_platform == target_platform]
     - pip check
   requires:
     - flaky
