@@ -27,8 +27,8 @@ requirements:
     - cmake
     - ninja
   host:
-    - libgomp      # [linux]
-    - llvm-openmp  # [osx]
+    - libgomp             # [linux]
+    - llvm-openmp >=18.0  # [osx]
     - kokkos >=4.3.0,<5.0.0
     - pip
     - pybind11
